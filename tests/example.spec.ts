@@ -1,18 +1,42 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+test("Making sure the home pages load properly", async ({ page }) => {
+  await page.goto("https://sweetshop.netlify.app");
+  const logo = page.getByText(" Sweet Shop ");
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
+  expect(logo).toBeTruthy();
+
+  const navbar = page.locator(".navbar-nav");
+  expect(navbar).toBeTruthy();
+
+  const products = page.getByText("Add to Basket");
+  expect(await products.count()).toBe(4);
 });
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+test("Verifying navigation menu links", async ({ page }) => {
+  await page.goto("https://sweetshop.netlify.app");
 
   // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
+  await page.getByText("Browse Sweets").click();
+  expect(page.url()).toBe("https://sweetshop.netlify.app/sweets");
 
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+  await page.getByText("About").click();
+  expect(page.url()).toBe("https://sweetshop.netlify.app/about");
+});
+
+test("Verify Contact Form Submission (Valid Input)", async ({ page }) => {
+  await page.goto("https://sweetshop.netlify.app/login");
+
+  const emailField = page.locator("#exampleInputEmail");
+  await emailField.fill("aminaskoko@mail.com");
+  expect(emailField).toHaveValue("aminaskoko@mail.com");
+
+  const passwordField = page.locator("#exampleInputPassword");
+
+  await passwordField.fill("12345");
+  expect(passwordField).toHaveValue("12345");
+
+  const loginButton = page.getByRole("button", { name: "Login" });
+  await loginButton.click();
+  expect(page.getByText("Your Account")).toBeTruthy();
 });
