@@ -40,3 +40,18 @@ test("Verify Contact Form Submission (Valid Input)", async ({ page }) => {
   await loginButton.click();
   expect(page.getByText("Your Account")).toBeTruthy();
 });
+
+test("Verify Contact Form Submission (Invalid Input)", async ({ page }) => {
+  await page.goto("https://sweetshop.netlify.app/login");
+
+  const emailField = page.locator("#exampleInputEmail");
+  await emailField.fill("aminaskokomail.com");
+
+  const passwordField = page.locator("#exampleInputPassword");
+
+  await passwordField.fill("12345");
+
+  const loginButton = page.getByRole("button", { name: "Login" });
+  await loginButton.click();
+  expect(page.getByText("Please enter a valid email address.")).toBeTruthy();
+});
