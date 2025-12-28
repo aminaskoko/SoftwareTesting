@@ -55,3 +55,8 @@ test("Verify Contact Form Submission (Invalid Input)", async ({ page }) => {
   await loginButton.click();
   expect(page.getByText("Please enter a valid email address.")).toBeTruthy();
 });
+
+test("Attempt to access non-existent page", async ({ page }) => {
+  await page.goto("https://sweetshop.netlify.app/sherbertstraws");
+  expect(page.getByText("Page not found")).toBeTruthy();
+});
